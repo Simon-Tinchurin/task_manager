@@ -3,6 +3,7 @@ from django.http import HttpResponse
 from django.contrib.auth.models import auth
 from django.contrib.auth import authenticate, login
 from .forms import TaskForm, CreateUserForm, LoginForm
+from .models import Task
 
 
 def register(request):
@@ -35,7 +36,17 @@ def log_in(request):
 
 
 def user_tasks(request):
-    return render(request, 'user_page.html')
+    form = TaskForm()
+    all_tasks = Task.objects.all()
+    context = {'form': form,
+               'tasks': all_tasks}
+    if request.method == 'POST':
+        form = TaskForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('tasks')
+
+    return render(request, 'user_page.html', context=context)
 
 
 def log_out(request):
