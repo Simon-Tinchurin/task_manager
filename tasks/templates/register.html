@@ -1,0 +1,7 @@
+{% include 'base.html' %}
+<form class="register-form" method="POST" autocomplete="off">
+    Registration:
+{% csrf_token %}
+    {{ form.as_p }}
+    <input type="submit" value="Sign up">
+</form>
