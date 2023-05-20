@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-from django.http import HttpResponse
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import auth
 from django.contrib.auth import authenticate, login
 from .forms import TaskForm, CreateUserForm, LoginForm
@@ -12,7 +12,12 @@ def register(request):
         form = CreateUserForm(request.POST)
         if form.is_valid():
             form.save()
-            return HttpResponse('User registered!')
+            username = form.cleaned_data.get('username')
+            password = form.cleaned_data.get('password1')
+            user = authenticate(request,
+                                username=username, password=password)
+            login(request, user)
+            return redirect('tasks')
     context = {'form': form}
     return render(request, 'register.html', context=context)
 
@@ -35,17 +40,19 @@ def log_in(request):
     return render(request, 'login.html', context=context)
 
 
+@login_required
 def user_tasks(request):
     form = TaskForm()
-    all_tasks = Task.objects.all()
+    all_tasks = Task.objects.filter(user=request.user)
     context = {'form': form,
                'tasks': all_tasks}
     if request.method == 'POST':
         form = TaskForm(request.POST)
         if form.is_valid():
-            form.save()
+            task = form.save(commit=False)
+            task.user = request.user
+            task.save()
             return redirect('tasks')
-
     return render(request, 'user_page.html', context=context)
 
 

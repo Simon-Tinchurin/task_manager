@@ -9,13 +9,13 @@ from .models import User, Task
 class CreateUserForm(UserCreationForm):
     class Meta:
         model = User
-        fields = '__all__'
+        fields = ['username', 'email']
 
 
 class TaskForm(ModelForm):
     class Meta:
         model = Task
-        fields = '__all__'
+        fields = 'title', 'content'
 
 
 class LoginForm(AuthenticationForm):
