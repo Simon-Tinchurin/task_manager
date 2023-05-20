@@ -1,7 +1,8 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import auth
 from django.contrib.auth import authenticate, login
+from django.http import HttpResponse
 from .forms import TaskForm, CreateUserForm, LoginForm
 from .models import Task
 
@@ -45,7 +46,8 @@ def log_in(request):
 @login_required
 def user_tasks(request):
     form = TaskForm()
-    all_tasks = Task.objects.filter(user=request.user)
+    # receive all user tasks
+    all_tasks = Task.objects.filter(user=request.user).order_by('-date_posted')
     context = {'form': form,
                'tasks': all_tasks}
     if request.method == 'POST':
@@ -56,6 +58,13 @@ def user_tasks(request):
             task.save()
             return redirect('tasks')
     return render(request, 'user_page.html', context=context)
+
+
+# view to delete task when it's done
+def delete_task(request, task_id):
+    task = get_object_or_404(Task, id=task_id)
+    task.delete()
+    return redirect('tasks')
 
 
 def log_out(request):
