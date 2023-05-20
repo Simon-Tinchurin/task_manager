@@ -6,6 +6,7 @@ from .forms import TaskForm, CreateUserForm, LoginForm
 from .models import Task
 
 
+# view to register new user
 def register(request):
     form = CreateUserForm()
     if request.method == 'POST':
@@ -22,6 +23,7 @@ def register(request):
     return render(request, 'register.html', context=context)
 
 
+# view to log in existing user
 def log_in(request):
     form = LoginForm()
     if request.method == 'POST':
@@ -39,6 +41,7 @@ def log_in(request):
     return render(request, 'login.html', context=context)
 
 
+# main page with user's tasks
 @login_required
 def user_tasks(request):
     form = TaskForm()

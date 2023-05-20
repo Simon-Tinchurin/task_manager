@@ -6,6 +6,7 @@ from django import forms
 from .models import User, Task
 
 
+# custom form for register new users
 class CreateUserForm(UserCreationForm):
     def __init__(self, *args, **kwargs):
         super(CreateUserForm, self).__init__(*args, **kwargs)
@@ -17,6 +18,7 @@ class CreateUserForm(UserCreationForm):
         fields = ['username', 'email']
 
 
+# form for user tasks
 class TaskForm(ModelForm):
     class Meta:
         model = Task
