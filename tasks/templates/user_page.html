@@ -1,0 +1,54 @@
+{% load widget_tweaks %}
+{% include 'base.html' %}
+
+<nav class="navbar navbar-light bg-light">
+    <div class="container-fluid">
+        <a class="navbar-brand">You are logged in as {{user}}</a>
+        <form class="d-flex">
+            <button class="btn btn-outline-danger" type="button"
+                    onclick="location.href='{% url 'log_out' %}'">Log out
+            </button>
+        </form>
+    </div>
+</nav>
+
+<div class="container-md">
+    <form class="task-form" method="POST" autocomplete="off">
+        {% csrf_token %}
+        <br/>
+        {% render_field form.title placeholder="Title" class+="form-control"%}
+        <br/>
+        {% render_field form.content type="textarea" placeholder="Content" class+="form-control" %}
+        <br/>
+        <input type="submit" class="btn btn-outline-success" value="Create">
+    </form>
+    <hr>
+    <div class="accordion" id="accordionFlushExample">
+
+        <table class="table">
+            <thead>
+            <tr>
+                <th scope="col">Title</th>
+                <th scope="col">Date</th>
+                <th scope="col">Content</th>
+                <th scope="col">Actions</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for task in tasks %}
+            <tr>
+                <th scope="row">{{task.title}}</th>
+                <td>{{task.date_posted|date:'d.m.y H:m'}}</td>
+                <td>{{task.content}}</td>
+                <td><button class="btn btn-outline-danger" type="button"
+                            onclick="location.href='{% url 'delete' task_id=task.id %}'">
+                    Done</button>
+                </td>
+            </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+
+    </div>
+
+</div>
