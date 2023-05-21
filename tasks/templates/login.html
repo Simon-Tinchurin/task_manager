@@ -1,8 +1,14 @@
 {% load widget_tweaks %}
 {% include 'base.html' %}
-
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<div class="container-sm" style="width: 400px;">
 <form class="login-form shadow-lg p-3 mb-5 bg-body rounded" method="POST" autocomplete="off">
-    <div class="card">
         {% csrf_token %}
         {% render_field form.username placeholder="Username" class+="form-control"%}
         {% render_field form.password placeholder="Password" class+="form-control"%}
@@ -11,6 +17,5 @@
             <input type="button" class="btn btn-outline-success" value="Register"
                    onclick="location.href='{% url 'register' %}'">
         </div>
-    </div>
 </form>
-
+</div>
