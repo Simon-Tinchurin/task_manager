@@ -1,8 +1,7 @@
-from django.shortcuts import render, redirect, get_object_or_404
+from django.shortcuts import render, redirect, get_object_or_404, get_list_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import auth
 from django.contrib.auth import authenticate, login
-from django.http import HttpResponse
 from .forms import TaskForm, CreateUserForm, LoginForm
 from .models import Task
 
@@ -60,8 +59,22 @@ def user_tasks(request):
     return render(request, 'user_page.html', context=context)
 
 
+def edit_task(request, task_id):
+    task = get_object_or_404(Task, id=task_id)
+    all_tasks = Task.objects.filter(user=request.user).order_by('-date_posted')
+    if request.method == 'POST':
+        form = TaskForm(request.POST, instance=task)
+        if form.is_valid():
+            form.save()
+            return redirect('tasks')  # Redirect to the 'tasks' URL
+    else:
+        form = TaskForm(instance=task)
+
+    return render(request, 'user_page.html', {'form': form, 'tasks': all_tasks})
+
+
 # view to delete task when it's done
-def delete_task(request, task_id):
+def delete_task(task_id):
     task = get_object_or_404(Task, id=task_id)
     task.delete()
     return redirect('tasks')
