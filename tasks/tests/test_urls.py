@@ -19,6 +19,7 @@ class TestUrl(SimpleTestCase):
         response = self.client.get(url)
         self.assertEqual(response.status_code, 200)
         self.assertEquals(resolve(url).func, log_in)
+        self.assertTemplateUsed(response, 'login.html')
 
     def test_user_page(self):
         url = reverse('tasks')
@@ -33,6 +34,7 @@ class TestUrl(SimpleTestCase):
         response = self.client.get(url)
         self.assertEqual(response.status_code, 200)
         self.assertEquals(resolve(url).func, register)
+        self.assertTemplateUsed(response, 'register.html')
 
     def test_log_out(self):
         url = reverse('log_out')
